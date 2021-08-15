@@ -7,9 +7,8 @@ import Title from '../components/Title';
 import VoteIcon from 'react-native-vector-icons/FontAwesome5';
 import background2 from "../../assets/background2.png"
 
-export default function Home() {
+export default function Home({ navigation }) {
   return (
-    <>
       <ImageBackground style={styles.image} source={background2}>
         <Header />
         <Title text="Boas-vindas, <matrícula>!" />
@@ -20,9 +19,8 @@ export default function Home() {
           <Btn title="Eleições Anteriores" width={256} />
           <Btn title="Minhas Eleições" width={256} />
         </View>
-        <Footer />
+        <Footer onPressAbout={() => navigation.navigate('About')}/>
       </ImageBackground>
-    </>
   );
 }
 

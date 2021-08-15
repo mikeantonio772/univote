@@ -3,12 +3,12 @@ import { StyleSheet, Text, View, Linking, TouchableHighlight } from 'react-nativ
 import GithubIcon from 'react-native-vector-icons/AntDesign';
 import InfoIcon from 'react-native-vector-icons/Entypo';
 
-export default function Footer() {
+export default function Footer(props) {
   return (
     <View style={styles.footer}>
       <TouchableHighlight
         underlayColor="#9154F8"
-        onPress={() => console.log("ok")}
+        onPress={props.onPressAbout}
       >
         <View style={styles.footerIcons}>
           <InfoIcon name="info" size={24} color='white' />

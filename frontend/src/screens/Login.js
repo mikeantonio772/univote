@@ -5,7 +5,6 @@ import background1 from "../../assets/background1.png"
 
 export default function Login({ navigation }) {
   return (
-    <>
       <ImageBackground style={styles.image} source={background1}>
         <View style={styles.container}>
           <View style={styles.titleBox}>
@@ -14,7 +13,6 @@ export default function Login({ navigation }) {
           <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Home')}/>
         </View>
       </ImageBackground>
-    </>
   );
 }
 
