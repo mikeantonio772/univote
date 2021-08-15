@@ -1,22 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
 import Btn from "../components/Btn";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Title from '../components/Title';
+import VoteIcon from 'react-native-vector-icons/FontAwesome5';
 import background2 from "../../assets/background2.png"
 
 export default function Home() {
   return (
     <>
       <ImageBackground style={styles.image} source={background2}>
-        <Header/>
+        <Header />
+        <Title text="Boas-vindas, <matrícula>!" />
         <View style={styles.container}>
-          <Btn title="Eleições Disponíveis" width={250} />
-          <Btn title="Meus Votos" width={250} />
-          <Btn title="Eleições Anteriores" width={250} />
-          <Btn title="Minhas Eleições" width={250} />
+          <VoteIcon style={{margin: 30, top: -30}} name="vote-yea" size={100} color="#878FFF"/>
+          <Btn title="Eleições Disponíveis" width={256} />
+          <Btn title="Meus Votos" width={256} />
+          <Btn title="Eleições Anteriores" width={256} />
+          <Btn title="Minhas Eleições" width={256} />
         </View>
-        <Footer/>
+        <Footer />
       </ImageBackground>
     </>
   );
@@ -28,7 +32,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    top: 100,
+    margin: 32,
+    top: -8,
   },
   image: {
     flex: 1,

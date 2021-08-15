@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-nativ
 import Btn from "../components/Btn";
 import background1 from "../../assets/background1.png"
 
-export default function Login() {
+export default function Login({ navigation }) {
   return (
     <>
       <ImageBackground style={styles.image} source={background1}>
@@ -11,7 +11,7 @@ export default function Login() {
           <View style={styles.titleBox}>
             <Text style={styles.title}>UNIVOTE</Text>
           </View>
-          <Btn title="ENTRAR" width={125} top={100} />
+          <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Home')}/>
         </View>
       </ImageBackground>
     </>
@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
   },
   titleBox: {
     backgroundColor: '#878FFF',
-    width: 250,
-    height: 120,
-    top: -100,
+    width: 256,
+    height: 128,
+    top: -104,
     borderWidth: 1,
     borderColor: '#9154F8',
     alignItems: 'center',

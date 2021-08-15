@@ -6,7 +6,7 @@ export default function Btn(props) {
   return (
     <TouchableHighlight
       style={[styles.button, { width: props.width, top: props.top }]}
-      onPress={() => console.log("ok")}
+      onPress={props.onPress}
       underlayColor="#9154F8"
     >
       <Text style={styles.buttonText}>{props.title}</Text>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     borderColor: '#9154F8',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 15,
+    margin: 16,
   },
   buttonText: {
     fontFamily: 'Roboto',

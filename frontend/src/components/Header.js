@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Header(props) {
+export default function Header() {
     return (
       <View style={styles.header}>
         <Text style={styles.headerText}>UNIVOTE</Text>
@@ -12,7 +12,7 @@ export default function Header(props) {
   const styles = StyleSheet.create({
     header: {
       backgroundColor: "#878FFF",
-      height: 110,
+      height: 112,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -20,6 +20,6 @@ export default function Header(props) {
       fontFamily: 'Roboto',
       fontSize: 25,
       color: 'white',
-      top: 10,
+      top: 8,
     }
   });
