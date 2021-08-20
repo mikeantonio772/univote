@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-native';
-import Btn from "../components/Btn";
-import background1 from "../../assets/background1.png"
+import Btn from '../components/Btn';
+import background1 from '../../assets/background1.png';
 
 export default function Login({ navigation }) {
   return (

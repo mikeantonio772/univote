@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from "./src/screens/Login";
-import Home from "./src/screens/Home";
+import Login from './src/screens/Login';
+import Home from './src/screens/Home';
 import About from './src/screens/About';
+import AvailableElections from './src/screens/AvailableElections'
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="Home" component={Home}/>
         <Stack.Screen name="About" component={About}/>
+        <Stack.Screen name="Available Elections" component={AvailableElections}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

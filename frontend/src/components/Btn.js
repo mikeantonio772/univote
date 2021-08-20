@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableHighlight } from 'react-native';
 export default function Btn(props) {
   return (
     <TouchableHighlight
-      style={[styles.button, { width: props.width, top: props.top }]}
+      style={[styles.button, { width: props.width, top: props.top, margin: props.margin }]}
       onPress={props.onPress}
       underlayColor="#9154F8"
     >
