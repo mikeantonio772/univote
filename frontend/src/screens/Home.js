@@ -11,15 +11,15 @@ export default function Home({ navigation }) {
   return (
       <ImageBackground style={styles.image} source={background2}>
         <Header />
-        <Title text="Boas-vindas, <matrícula>!" />
+        <Title text="Boas-vindas, <matrícula>!" back={false}/>
         <View style={styles.container}>
-          <VoteIcon style={{margin: 30, top: -30}} name="vote-yea" size={100} color="#878FFF"/>
+          <VoteIcon style={{margin: 24, top: -24}} name="vote-yea" size={100} color="#878FFF"/>
           <Btn title="Eleições Disponíveis" width={256} margin={16} onPress={() => navigation.navigate('Available Elections')} />
-          <Btn title="Meus Votos" width={256} margin={16} />
-          <Btn title="Eleições Anteriores" width={256} margin={16} />
-          <Btn title="Minhas Eleições" width={256} margin={16} />
+          <Btn title="Meus Votos" width={256} margin={16} onPress={() => navigation.navigate('My Votes')} />
+          <Btn title="Eleições Anteriores" width={256} margin={16} onPress={() => navigation.navigate('Previous Elections')} />
+          <Btn title="Minhas Eleições" width={256} margin={16} onPress={() => navigation.navigate('My Elections')} />
         </View>
-        <Footer onPressAbout={() => navigation.navigate('About')}/>
+        <Footer backgroundColor="#878FFF" onPressAbout={() => navigation.navigate('About')}/>
       </ImageBackground>
   );
 }
@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     margin: 32,
-    top: -8,
+    bottom: 24,
   },
   image: {
     flex: 1,
