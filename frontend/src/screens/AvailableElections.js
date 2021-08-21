@@ -36,9 +36,9 @@ const DATA = [
 const renderItem = ({ item }) => (
   <View style={styles.container}>
     <Card>
-      <Text>{item.title}</Text>
+      <Text style={[styles.baseText, { fontWeight: 'bold' }]}>{item.title}</Text>
       <View alignItems='center'>
-        <Btn title='VOTAR' width={256} margin={0}/>
+        <Btn title='VOTAR' width={256} margin={0} />
       </View>
     </Card>
   </View>
@@ -48,7 +48,7 @@ export default function AvailableElections({ navigation }) {
   return (
     <ImageBackground style={styles.image} source={background2}>
       <Header />
-      <Title text='Eleições Disponíveis' />
+      <Title text='Eleições Disponíveis' back={true} onPressBack={() => navigation.goBack()} />
       <FlatList
         data={DATA}
         renderItem={renderItem}
@@ -68,5 +68,11 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     width: Dimensions.get("window").width,
+  },
+  baseText: {
+    fontFamily: 'Roboto',
+    fontSize: 20,
+    color: 'white',
+    marginBottom: 16
   },
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Dimensions } from 'react-native';
 import Btn from '../components/Btn';
 import background1 from '../../assets/background1.png';
+import Footer from '../components/Footer';
 
 export default function Login({ navigation }) {
   return (
@@ -12,6 +13,7 @@ export default function Login({ navigation }) {
           </View>
           <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Home')}/>
         </View>
+        <Footer backgroundColor= "#878FFF77" onPressAbout={() => navigation.navigate('About')}/>
       </ImageBackground>
   );
 }

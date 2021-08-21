@@ -5,7 +5,7 @@ import InfoIcon from 'react-native-vector-icons/Entypo';
 
 export default function Footer(props) {
   return (
-    <View style={styles.footer}>
+    <View style={[styles.footer, {backgroundColor: props.backgroundColor}]}>
       <TouchableHighlight
         underlayColor="#9154F8"
         onPress={props.onPressAbout}
@@ -31,7 +31,6 @@ export default function Footer(props) {
 
 const styles = StyleSheet.create({
   footer: {
-    backgroundColor: "#878FFF",
     height: 80,
     flexDirection: 'row',
     alignItems: 'center',
@@ -51,6 +50,6 @@ const styles = StyleSheet.create({
   footerLine: {
     height: 64,
     width: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   }
 });
