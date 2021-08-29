@@ -1,16 +1,25 @@
 {
-  "name": "univote",
+  "name": "jwt_example",
   "version": "1.0.0",
-  "description": "Univote is a free voting software, that uses authentication systems like shibboleth",
+  "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongodb": "^4.1.0",
-    "mongoose": "^5.13.7"
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mongoose": "^5.13.8"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

@@ -8,27 +8,27 @@ import Card from '../components/Card';
 
 const DATA = [
   {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+    _id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     title: 'Eleição X',
   },
   {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+    _id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
     title: 'Eleição Y',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
+    _id: '58694a0f-3da1-471f-bd96-145571e29d72',
     title: 'Eleição Z',
   },
   {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bb',
+    _id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bb',
     title: 'Eleição X',
   },
   {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f64',
+    _id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f64',
     title: 'Eleição Y',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d73',
+    _id: '58694a0f-3da1-471f-bd96-145571e29d73',
     title: 'Eleição Z',
   },
 ];
@@ -37,6 +37,8 @@ const renderItem = ({ item }) => (
   <View style={styles.container}>
     <Card>
       <Text style={[styles.baseText, { fontWeight: 'bold' }]}>{item.title}</Text>
+      <Text style={[styles.baseText, { fontWeight: 'bold' }]}>{item.dateStart}</Text>
+      <Text style={[styles.baseText, { fontWeight: 'bold' }]}>{item.dateFinish}</Text>
       <View alignItems='center'>
         <Btn title='VOTAR' width={256} margin={0} />
       </View>
@@ -45,14 +47,21 @@ const renderItem = ({ item }) => (
 )
 
 export default function AvailableElections({ navigation }) {
+  const [data, setData] = React.useState(null);
+
+  React.useEffect(() => {
+    fetch("http://192.168.15.6:3000/all_elections")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
   return (
     <ImageBackground style={styles.image} source={background2}>
       <Header />
       <Title text='Eleições Disponíveis' back={true} onPressBack={() => navigation.goBack()} />
       <FlatList
-        data={DATA}
+        data={data}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item._id}
       />
     </ImageBackground>
   );

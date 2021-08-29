@@ -5,18 +5,19 @@ import Btn from '../components/Btn';
 import Card from '../components/Card';
 
 export default function About({ navigation }) {
+  const [data, setData] = React.useState(null);
+
+  React.useEffect(() => {
+    fetch("http://192.168.15.6:3000/sobre")
+      .then((res) => res.json())
+      .then((data) => setData(data.texto));
+  }, []);
   return (
     <ImageBackground style={styles.image} source={background1}>
       <ScrollView style={{marginVertical: '25%'}} contentContainerStyle={styles.container}>
         <Card>
           <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            {!data ? "Texto indisponivel" : data}
           </Text>
           <View alignItems='center'>
             <Btn title="Fechar" width={128} onPress={() => navigation.goBack()} />
