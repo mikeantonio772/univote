@@ -16,7 +16,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="Login" component={Login} initialParams={{ user: {token: null, username: ''}}}/>
         <Stack.Screen name="Sso" component={Sso}/>
         <Stack.Screen name="Home" component={Home}/>
         <Stack.Screen name="About" component={About}/>

@@ -4,19 +4,28 @@ import Btn from '../components/Btn';
 import background1 from '../../assets/background1.png';
 import Footer from '../components/Footer';
 
-export default function Login({ navigation }) {
-  return (
+export default function Login({ navigation, route }) {
+
+  const { user } = route.params;
+
+  if (user.token) {
+    return navigation.navigate('Home', { user })
+  }
+  else {
+    return (
       <ImageBackground style={styles.image} source={background1}>
         <View style={styles.container}>
           <View style={styles.titleBox}>
             <Text style={styles.title}>UNIVOTE</Text>
           </View>
-          <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Sso')}/>
+          <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Sso')} />
         </View>
-        <Footer backgroundColor= "#878FFF77" onPressAbout={() => navigation.navigate('About')}/>
+        <Footer backgroundColor="#878FFF77" onPressAbout={() => navigation.navigate('About')} />
       </ImageBackground>
-  );
+    );
+  }
 }
+
 
 const styles = StyleSheet.create({
   container: {

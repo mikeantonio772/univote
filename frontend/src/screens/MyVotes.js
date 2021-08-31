@@ -32,18 +32,26 @@ const renderItem = ({ item }) => (
   </View>
 )
 
-export default function MyVotes({ navigation }) {
-  return (
-    <ImageBackground style={styles.image} source={background2}>
-      <Header />
-      <Title text='Meus Votos' back={true} onPressBack={() => navigation.goBack()} />
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </ImageBackground>
-  );
+export default function MyVotes({ navigation, route }) {
+
+  const { user } = route.params;
+
+  if (user.token) {
+    return (
+      <ImageBackground style={styles.image} source={background2}>
+        <Header />
+        <Title text='Meus Votos' back={true} onPressBack={() => navigation.goBack()} />
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+      </ImageBackground>
+    );
+  }
+  else {
+    navigation.navigate('Login');
+  }
 }
 
 const styles = StyleSheet.create({

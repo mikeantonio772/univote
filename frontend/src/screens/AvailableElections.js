@@ -46,26 +46,34 @@ const renderItem = ({ item }) => (
   </View>
 )
 
-export default function AvailableElections({ navigation }) {
+export default function AvailableElections({ navigation, route }) {
+
+  const { user } = route.params;
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
-    fetch("http://192.168.15.6:3000/all_elections")
+    fetch("http://192.168.0.12:3000/all_elections")
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
-  return (
-    <ImageBackground style={styles.image} source={background2}>
-      <Header />
-      <Title text='Eleições Disponíveis' back={true} onPressBack={() => navigation.goBack()} />
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item._id}
-      />
-    </ImageBackground>
-  );
+
+  if (user.token) {
+    return (
+      <ImageBackground style={styles.image} source={background2}>
+        <Header />
+        <Title text='Eleições Disponíveis' back={true} onPressBack={() => navigation.goBack()} />
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={item => item._id}
+        />
+      </ImageBackground>
+    );
+  } else {
+    navigation.navigate('Login');
+  }
 }
+
 
 const styles = StyleSheet.create({
   container: {

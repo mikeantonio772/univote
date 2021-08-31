@@ -11,18 +11,18 @@ const DATA = [
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     title: 'Eleição X',
     candidatos: {
-        opcao1: 'Carlos - 212 votos - 45.9%',
-        opcao2: 'Maria - 197 votos - 42.6%',
-        opcao3: 'Branco - 53 votos - 11.5%', 
+      opcao1: 'Carlos - 212 votos - 45.9%',
+      opcao2: 'Maria - 197 votos - 42.6%',
+      opcao3: 'Branco - 53 votos - 11.5%',
     }
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
     title: 'Eleição Y',
     candidatos: {
-        opcao1: 'Carlos - 212 votos - 45.9%',
-        opcao2: 'Maria - 197 votos - 42.6%',
-        opcao3: 'Branco - 53 votos - 11.5%', 
+      opcao1: 'Carlos - 212 votos - 45.9%',
+      opcao2: 'Maria - 197 votos - 42.6%',
+      opcao3: 'Branco - 53 votos - 11.5%',
     }
   },
 ];
@@ -42,18 +42,26 @@ const renderItem = ({ item }) => (
   </View>
 )
 
-export default function AvailableElections({ navigation }) {
-  return (
-    <ImageBackground style={styles.image} source={background2}>
-      <Header />
-      <Title text='Eleições Anteriores' back={true} onPressBack={() => navigation.goBack()} />
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </ImageBackground>
-  );
+export default function AvailableElections({ navigation, route }) {
+
+  const { user } = route.params;
+
+  if (user.token) {
+    return (
+      <ImageBackground style={styles.image} source={background2}>
+        <Header />
+        <Title text='Eleições Anteriores' back={true} onPressBack={() => navigation.goBack()} />
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+      </ImageBackground>
+    );
+  }
+  else {
+    navigation.navigate('Login');
+  }
 }
 
 const styles = StyleSheet.create({
