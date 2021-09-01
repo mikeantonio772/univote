@@ -18,48 +18,40 @@ export default function CreateVoting({ navigation, route }) {
   const [descricao, onChangeTextDescricao] = useState("");
   const [podemVotar, onChangeTextPodemVotar] = useState("");
 
-  // let data = {
-  //   headers: {
-  //     "x-access-token": user.token,
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: {
-  //     candidates: [{
-  //       id: candidatos
-  //       },{
-  //       id: candidatos
-  //     }],
-  //     requested_by: user.username,
-  //     date_start: dataInit,
-  //     date_finish: dataFim,
-  //     title: titulo,
-  //     description: descricao,
-  //     users_able_to_vote: [{
-  //       id: podemVotar
-  //     },{
-  //       id: podemVotar
-  //     }]
-  //   }
-  // };
+  let header = {
+    headers: {
+      "x-access-token": user.token,
+      'Content-Type': 'application/json',
+    },
+  };
 
+  let body = {
+    candidates: [{
+      id: candidatos
+    }, {
+      id: "Zé Ruela"
+    }],
+    requested_by: user.username,
+    date_start: dataInit,
+    date_finish: dataFim,
+    title: titulo,
+    description: descricao,
+    users_able_to_vote: [{
+      id: podemVotar
+    }, {
+      id: "mikeantonio772"
+    }]
+  };
 
-  ///// teste
-  // let data = {
-  //   headers: {
-  //       "x-access-token": user.token,
-  //       'Content-Type': 'application/json',
-  //   }
-  // };
-
-  // function sendCreateVotingRequest() {
-  //   console.log(data)
-  //   api.post("/welcome", data)
-  //       .then((response) => {
-  //         console.log(JSON.stringify(response.data));
-  //       })
-  // }
-
-////////
+  const sendCreateVotingRequest = async () => {
+    return api.post('/votings/create', body, header)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   if (user.token) {
     return (
@@ -83,7 +75,7 @@ export default function CreateVoting({ navigation, route }) {
               style={styles.input}
               onChangeText={onChangeTextDataInit}
               value={dataInit}
-              placeholder="Ex: 1630264625"
+              placeholder="YYYY-MM-dd"
               placeholderTextColor="#FFFFFF88"
             />
           </SafeAreaView>
@@ -93,7 +85,7 @@ export default function CreateVoting({ navigation, route }) {
               style={styles.input}
               onChangeText={onChangeTextDataFim}
               value={dataFim}
-              placeholder="Ex: 1632856625"
+              placeholder="YYYY-MM-dd"
               placeholderTextColor="#FFFFFF88"
             />
           </SafeAreaView>

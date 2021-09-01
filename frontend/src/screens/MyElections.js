@@ -41,7 +41,10 @@ export default function AvailableElections({ navigation, route }) {
         /> */}
         <View style={styles.container}>
           <Card>
-            <Text style={styles.baseText}>Nenhuma eleição cadastrada</Text>
+            <Text style={styles.baseText}>Você pode criar sua própria eleição! 
+                Clique no botão abaixo e preencha os campos solicitados. Lembre-se de inserir
+                todos os eleitores aptos a votar, pois apenas eles poderão participar da votação.
+                Boa eleição!</Text>
             <View alignItems='center'>
               <Btn title='Criar Eleição' width={256} margin={0} onPress={() => navigation.navigate('Create Voting', { user })} />
             </View>
@@ -72,6 +75,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontSize: 20,
     color: 'white',
-    marginBottom: 16
+    marginBottom: 16,
+    textAlign: 'justify'
   },
 });

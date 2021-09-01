@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ImageBackground, Dimensions, Text, FlatList } from 'react-native';
 import Btn from "../components/Btn";
 import Header from '../components/Header';
@@ -6,57 +6,49 @@ import Title from '../components/Title';
 import background2 from "../../assets/background2.png"
 import Card from '../components/Card';
 import InvalidUser from './InvalidUser';
-
-const DATA = [
-  {
-    _id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'Eleição X',
-  },
-  {
-    _id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Eleição Y',
-  },
-  {
-    _id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Eleição Z',
-  },
-  {
-    _id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bb',
-    title: 'Eleição X',
-  },
-  {
-    _id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f64',
-    title: 'Eleição Y',
-  },
-  {
-    _id: '58694a0f-3da1-471f-bd96-145571e29d73',
-    title: 'Eleição Z',
-  },
-];
+import api from '../services/api';
 
 const renderItem = ({ item }) => (
-  <View style={styles.container}>
-    <Card>
-      <Text style={[styles.baseText, { fontWeight: 'bold' }]}>{item.title}</Text>
-      <Text style={[styles.baseText, { fontWeight: 'bold' }]}>{item.dateStart}</Text>
-      <Text style={[styles.baseText, { fontWeight: 'bold' }]}>{item.dateFinish}</Text>
-      <View alignItems='center'>
-        <Btn title='VOTAR' width={256} margin={0} />
+  <>
+    {item.is_active == true ?
+      <View style={styles.container}>
+        <Card>
+          <View alignItems='center'>
+            <Text style={[styles.baseText, { fontWeight: 'bold', fontSize: 22 }]}>{item.title}</Text>
+          </View>
+          <Text style={[styles.baseText, {}]}>{item.description}</Text>
+          <Text style={[styles.baseText, { fontWeight: 'bold' }]}>Início: {item.date_start}</Text>
+          <Text style={[styles.baseText, { fontWeight: 'bold' }]}>Fim: {item.date_finish}</Text>
+          <View alignItems='center'>
+            <Btn title='VOTAR' width={256} margin={0} />
+          </View>
+        </Card>
       </View>
-    </Card>
-  </View>
+      : null}
+  </>
 )
 
 export default function AvailableElections({ navigation, route }) {
 
   const { user } = route.params;
-  const [data, setData] = React.useState(null);
+  const [data, setData] = useState(null)
 
-  React.useEffect(() => {
-    fetch("http://192.168.0.12:3000/all_elections")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  let header = {
+    headers: {
+      "x-access-token": user.token,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  useEffect(() => {
+  api.post('/votings/my', { username: user.username }, header)
+    .then((response) => {
+      setData(response.data)
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  });
 
   if (user.token) {
     return (
