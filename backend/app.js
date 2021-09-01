@@ -99,8 +99,8 @@ app.post("/login", async (req,res)=>{
     }
 });
 
-app.post("/my_votings", auth, (req, res) => {
-    var username_hash = crypto.createHash('md5').update(req.body.username).digest('hex');
+app.post("/votings/my", auth, (req, res) => {
+    var username_hash = crypto.createHash('sha256').update(req.body.username).digest('hex');
     Voting.find({'users_able_to_vote.id':username_hash},(err,result)=>{
         if(err){
             console.log(`[ERR] FINDING VOTES FOR USER: ${err}`);
@@ -110,59 +110,118 @@ app.post("/my_votings", auth, (req, res) => {
     });
 });
 
-app.post("/vote",auth,(req, res) => {
-    voting_id = req.body._id;
-    const username_hash = crypto.createHash('md5').update(req.body.username).digest('hex');
-    Voting.findOne({'_id':voting_id, 'users_able_to_vote.id': username_hash},(err,result)=>{
+app.post("/votings/end", auth, (req, res) => {
+    voting_id = req.body.id;
+    Voting.findOne({'_id':voting_id},(err,result)=>{
         if(err){
-            console.log(`[ERR] FINDING VOTING ID: ${err}`);
+            console.log(`[ERR] QUERYING VOTE ID ${voting_id}: ${err}`);
         }else{
-            user = result.users_able_to_vote.find(item =>{
-                return item.id == username_hash;
-            });
-            if (user.has_vote == false){
-                user.has_vote = true;
-                const candidate_id = req.body.candidate.id;
-                const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-                    modulusLength: 2048,
-                });
-                const encryptedData = crypto.publicEncrypt(
-                    {
-                      key: publicKey,
-                      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-                      oaepHash: "sha256",
-                    },
-                    Buffer.from(req.body.username)
-                );
-                console.log(encryptedData.toString("base64"));
-                const vote = {
-                    selected_candidate: candidate_id,
-                    encrypted_vote_data: encryptedData.toString("base64"),
-                }
-                result.users_able_to_vote.find(item =>{
-                    if (item.id == username_hash){
-                        item = user;
-                    }
-                });
-                result.votes.push(vote);
-                result.public_key = publicKey.export({type: 'pkcs1', format: 'pem'});
-                result.save();
-                const decryptedData = crypto.privateDecrypt({
-                    key: privateKey,
-                    padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-                    oaepHash: "sha256",
-                },encryptedData
-                );
-                console.log("decrypted data: ", decryptedData.toString());
-                res.status(200).json(privateKey.export({type: 'pkcs1', format: 'pem'}));
+            if ( result.is_active == false){
+                res.status(400).send("Voting is already finished");
             }else{
-                res.status(400).send("User already voted");
+                result.is_active = false;
+                console.log(result);
+                result.save();
+                res.status(200).send();
             }
         }
     });
 });
 
-app.post("/create_voting",(req,res)=>{
+app.get("/votings/all", auth, (req, res) => {
+    Voting.find({},(err,result)=>{
+        if(err){
+            console.log(`[ERR] QUERYING ALL VOTES: ${err}`);
+        }else{
+            result.forEach(element=>{
+                format_date_finish = new Date(element.date_finish);
+                if (format_date_finish < Date.now() && element.is_active == true){
+                    element.is_active = false;
+                    console.log(element);
+                }
+                element.save();
+            });
+            res.status(200).json(result);
+        }
+    });
+});
+
+app.get("/votings/:id", auth, (req, res) => {
+    voting_id = req.params.id;
+    Voting.findOne({'_id':voting_id},(err,result)=>{
+        if(err){
+            console.log(`[ERR] QUERYING VOTE ID ${voting_id}: ${err}`);
+        }else{
+            var format_date_finish = new Date(result.date_finish);
+            if (format_date_finish < Date.now() && result.is_active == true){
+                result.is_active = false;
+                result.save();
+            }
+            res.status(200).json(result);
+        }
+    });
+});
+
+app.post("/votings/vote",auth,(req, res) => {
+    voting_id = req.body._id;
+    const username_hash = crypto.createHash('sha256').update(req.body.username).digest('hex');
+    Voting.findOne({'_id':voting_id, 'users_able_to_vote.id': username_hash},(err,result)=>{
+        if(err){
+            console.log(`[ERR] FINDING VOTING ID: ${err}`);
+        }else{
+            if (result.is_active == false){
+                console.log(`[ERR] VOTING HAS FINISHED`);
+            }else{  
+                user = result.users_able_to_vote.find(item =>{
+                    return item.id == username_hash;
+                });
+                if (user.has_voted == false){
+                    user.has_voted = true;
+                    const candidate_id = req.body.candidate.id;
+                    const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+                        modulusLength: 1024,
+                    });
+                    const encryptedData = crypto.publicEncrypt(
+                        {
+                        key: publicKey,
+                        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+                        oaepHash: "sha256",
+                        },
+                        Buffer.from(req.body.username)
+                    );
+                    console.log(encryptedData.toString("base64"));
+                    const vote = {
+                        selected_candidate: candidate_id,
+                        encrypted_vote_data: encryptedData.toString("base64"),
+                    }
+                    result.users_able_to_vote.find(item =>{
+                        if (item.id == username_hash){
+                            item = user;
+                        }
+                    });
+                    result.votes.push(vote);
+                    result.public_key = publicKey.export({type: 'pkcs1', format: 'pem'});
+                    if (result.users_able_to_vote.length == result.votes.length){
+                        result.is_active = false;
+                    }
+                    result.save();
+                    const decryptedData = crypto.privateDecrypt({
+                        key: privateKey,
+                        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+                        oaepHash: "sha256",
+                    },encryptedData
+                    );
+                    console.log("decrypted data: ", decryptedData.toString());
+                    res.status(200).json(privateKey.export({type: 'pkcs1', format: 'pem'}));
+                }else{
+                    res.status(400).send("User already voted");
+                }
+            }
+        }
+    });
+});
+
+app.post("/votings/create",auth,(req,res)=>{
     try{
         const {
             candidates,
@@ -182,6 +241,15 @@ app.post("/create_voting",(req,res)=>{
         if(checkDup(users_able_to_vote)){
             res.status(400).send("Duplicated voters");
         }
+        var format_date_start = new Date(date_start);
+        var format_date_finish = new Date(date_finish);
+        if (format_date_finish <= format_date_start){
+            res.status(400).send("Finish date cannot come first than date start");
+        }
+        if (format_date_start < Date.now()){
+            res.status(400).send("Date start needs to be current date + 1");
+        }
+
         var voting = new Voting;
         voting.title = title;
         voting.requested_by = requested_by;
@@ -192,13 +260,14 @@ app.post("/create_voting",(req,res)=>{
             voting.candidates.push(element);
         });
         users_able_to_vote.forEach(element =>{
-            var hash = crypto.createHash('md5').update(element.id).digest('hex');
+            var hash = crypto.createHash('sha256').update(element.id).digest('hex');
             element.id = hash;
             voting.users_able_to_vote.push(element);
         })
         voting.save();
         console.log(voting);
         res.status(201).json(voting);
+
     }catch (err) {
         console.log(`[ERR] VOTING CREATION: ${err}`);
     }
