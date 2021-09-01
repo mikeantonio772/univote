@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Title from '../components/Title';
 import background2 from "../../assets/background2.png"
 import Card from '../components/Card';
+import InvalidUser from './InvalidUser';
 
 const DATA = [
   {
@@ -50,7 +51,9 @@ export default function MyVotes({ navigation, route }) {
     );
   }
   else {
-    navigation.navigate('Login');
+    return (
+      <InvalidUser onPress={() => navigation.navigate('Login')}></InvalidUser>
+    );
   }
 }
 

@@ -10,7 +10,6 @@ export default function Sso({ navigation }) {
     const token = searchParams.get('token');
     const username = searchParams.get('username');
 
-    // console.log(token)
     if (token) {
       navigation.navigate('Home', {
         user: {

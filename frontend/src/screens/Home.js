@@ -4,13 +4,27 @@ import Btn from '../components/Btn';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Title from '../components/Title';
+import InvalidUser from './InvalidUser';
 import VoteIcon from 'react-native-vector-icons/FontAwesome5';
 import background2 from '../../assets/background2.png';
+import api from '../services/api';
+
 
 export default function Home({ navigation, route }) {
 
   const { user } = route.params;
   const welcomeText = "Boas-vindas, " + JSON.stringify(user.username).replace(/\"/g, "") + "!";
+
+  // let data = {
+  //   headers: {
+  //       "x-access-token": user.token,
+  //       'Content-Type': 'application/json',
+  //   }
+  // };
+
+  // api.get("/welcome", data).then((response) => {
+  //   console.log(JSON.stringify(response.data));
+  // })
 
   if (user.token) {
     return (
@@ -29,7 +43,9 @@ export default function Home({ navigation, route }) {
     );
   }
   else {
-    return (navigation.navigate('Login'));
+    return (
+      <InvalidUser onPress={() => navigation.navigate('Login')}></InvalidUser>
+    );
   }
 }
 

@@ -5,24 +5,25 @@ import Header from '../components/Header';
 import Title from '../components/Title';
 import background2 from "../../assets/background2.png"
 import Card from '../components/Card';
+import InvalidUser from './InvalidUser';
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'Nenhuma eleição cadastrada',
-  },
-];
+// const DATA = [
+//   {
+//     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+//     title: 'Nenhuma eleição cadastrada',
+//   },
+// ];
 
-const renderItem = ({ item }) => (
-  <View style={styles.container}>
-    <Card>
-      <Text style={styles.baseText}>{item.title}</Text>
-      <View alignItems='center'>
-        <Btn title='Criar Eleição' width={256} margin={0} />
-      </View>
-    </Card>
-  </View>
-)
+// const renderItem = ({ item }) => (
+//   <View style={styles.container}>
+//     <Card>
+//       <Text style={styles.baseText}>{item.title}</Text>
+//       <View alignItems='center'>
+//         <Btn title='Criar Eleição' width={256} margin={0} onPress={() => navigation.navigate('Create Voting', { user })} />
+//       </View>
+//     </Card>
+//   </View>
+// )
 
 export default function AvailableElections({ navigation, route }) {
 
@@ -33,16 +34,26 @@ export default function AvailableElections({ navigation, route }) {
       <ImageBackground style={styles.image} source={background2}>
         <Header />
         <Title text='Minhas Eleições' back={true} onPressBack={() => navigation.goBack()} />
-        <FlatList
+        {/* <FlatList
           data={DATA}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-        />
+        /> */}
+        <View style={styles.container}>
+          <Card>
+            <Text style={styles.baseText}>Nenhuma eleição cadastrada</Text>
+            <View alignItems='center'>
+              <Btn title='Criar Eleição' width={256} margin={0} onPress={() => navigation.navigate('Create Voting', { user })} />
+            </View>
+          </Card>
+        </View>
       </ImageBackground>
     );
   }
   else {
-    navigation.navigate('Login');
+    return (
+      <InvalidUser onPress={() => navigation.navigate('Login')}></InvalidUser>
+    );
   }
 }
 

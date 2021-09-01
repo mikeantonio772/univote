@@ -8,22 +8,17 @@ export default function Login({ navigation, route }) {
 
   const { user } = route.params;
 
-  if (user.token) {
-    return navigation.navigate('Home', { user })
-  }
-  else {
-    return (
-      <ImageBackground style={styles.image} source={background1}>
-        <View style={styles.container}>
-          <View style={styles.titleBox}>
-            <Text style={styles.title}>UNIVOTE</Text>
-          </View>
-          <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate('Sso')} />
+  return (
+    <ImageBackground style={styles.image} source={background1}>
+      <View style={styles.container}>
+        <View style={styles.titleBox}>
+          <Text style={styles.title}>UNIVOTE</Text>
         </View>
-        <Footer backgroundColor="#878FFF77" onPressAbout={() => navigation.navigate('About')} />
-      </ImageBackground>
-    );
-  }
+        <Btn title="ENTRAR" width={128} top={104} onPress={() => navigation.navigate(!user.token ? 'Sso' : ('Home', user))} />
+      </View>
+      <Footer backgroundColor="#878FFF77" onPressAbout={() => navigation.navigate('About')} />
+    </ImageBackground>
+  );
 }
 
 
