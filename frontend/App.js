@@ -7,9 +7,12 @@ import Home from './src/screens/Home';
 import About from './src/screens/About';
 import AvailableElections from './src/screens/AvailableElections'
 import MyVotes from './src/screens/MyVotes';
-import PreviousElections from './src/screens/PreviousElections';
+import AllElections from './src/screens/AllElections';
 import MyElections from './src/screens/MyElections';
 import CreateVoting from './src/screens/CreateVoting';
+import VoteProcess from './src/screens/VoteProcess';
+import MyVotesDetails from './src/screens/MyVotesDetails';
+import AllElectionsDetails from './src/screens/AllElectionsDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,9 +26,12 @@ export default function App() {
         <Stack.Screen name="About" component={About}/>
         <Stack.Screen name="Available Elections" component={AvailableElections}/>
         <Stack.Screen name="My Votes" component={MyVotes}/>
-        <Stack.Screen name="Previous Elections" component={PreviousElections}/>
+        <Stack.Screen name="All Elections" component={AllElections}/>
         <Stack.Screen name="My Elections" component={MyElections}/>
         <Stack.Screen name="Create Voting" component={CreateVoting}/>
+        <Stack.Screen name="Vote Process" component={VoteProcess}/>
+        <Stack.Screen name="My Votes Details" component={MyVotesDetails}/>
+        <Stack.Screen name="All Elections Details" component={AllElectionsDetails}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -9,22 +9,10 @@ import VoteIcon from 'react-native-vector-icons/FontAwesome5';
 import background2 from '../../assets/background2.png';
 import api from '../services/api';
 
-
 export default function Home({ navigation, route }) {
 
   const { user } = route.params;
   const welcomeText = "Boas-vindas, " + JSON.stringify(user.username).replace(/\"/g, "") + "!";
-
-  // let data = {
-  //   headers: {
-  //       "x-access-token": user.token,
-  //       'Content-Type': 'application/json',
-  //   }
-  // };
-
-  // api.get("/welcome", data).then((response) => {
-  //   console.log(JSON.stringify(response.data));
-  // })
 
   if (user.token) {
     return (
@@ -35,7 +23,7 @@ export default function Home({ navigation, route }) {
           <VoteIcon style={{ margin: 24, top: -24 }} name="vote-yea" size={100} color="#878FFF" />
           <Btn title="Eleições Disponíveis" width={256} margin={16} onPress={() => navigation.navigate('Available Elections', { user })} />
           <Btn title="Meus Votos" width={256} margin={16} onPress={() => navigation.navigate('My Votes', { user })} />
-          <Btn title="Eleições Anteriores" width={256} margin={16} onPress={() => navigation.navigate('Previous Elections', { user })} />
+          <Btn title="Todas Eleições" width={256} margin={16} onPress={() => navigation.navigate('All Elections', { user })} />
           <Btn title="Minhas Eleições" width={256} margin={16} onPress={() => navigation.navigate('My Elections', { user })} />
         </View>
         <Footer backgroundColor="#878FFF" onPressAbout={() => navigation.navigate('About')} />
