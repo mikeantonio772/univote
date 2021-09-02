@@ -11,8 +11,6 @@ export default function Vote({ navigation, route }) {
   const { user } = route.params;
   const privateKey = route.params.data;
   
-  const [copiedText, setCopiedText] = useState('')
-  
   const copyToClipboard = () => {
     Clipboard.setString(privateKey)
   }

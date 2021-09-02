@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, LogBox, View, ImageBackground, Dimensions, Text, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import {Clipboard, StyleSheet, TextInput, LogBox, View, ImageBackground, Dimensions,Alert, Text, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import moment from 'moment';
 import Btn from "../components/Btn";
 import Header from '../components/Header';
@@ -13,6 +13,8 @@ export default function VoteProcess({ navigation, route }) {
 
   const { user } = route.params;
 
+  const [pKey, onChangeEncrypt] = useState("");
+  
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +24,27 @@ export default function VoteProcess({ navigation, route }) {
       'Content-Type': 'application/json',
     },
   };
+
+  let body = {
+    private_key: pKey,
+  };
+
+  const successAlert = (data) =>
+    Alert.alert(
+      "Auditoria",
+      "Comprovante descriptografado:\n" + data,
+      [{ text: "OK", onPress: () => (console.log("audit")) }]
+  );
+
+  const checkEncrypt = async () => {
+    console.log(pKey);
+    await api.post(`/votings/decrypt/${user.eleicao_id}`,body, header)
+      .then((response) => successAlert(JSON.stringify(response.data)))
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  
 
   useEffect(() => {
     setLoading(true);
@@ -75,6 +98,14 @@ export default function VoteProcess({ navigation, route }) {
                     scrollEnabled={false}
                   />
                   <View alignItems='center'>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={onChangeEncrypt}
+                      value={pKey}
+                      placeholder="Cole a chave privada aqui"
+                      placeholderTextColor="#FFFFFF88"
+                    />
+                    <Btn title="Auditar voto" width={256} margin={16} onPress={() => checkEncrypt()} /> 
                     <Btn title='Voltar' width={256} margin={16} onPress={() => navigation.goBack()} />
                   </View>
                 </Card>
@@ -116,7 +147,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     color: 'white',
-    width: 336,
+    width: 256,
     backgroundColor: '#878FFF66',
     borderRadius: 8,
     borderWidth: 1,

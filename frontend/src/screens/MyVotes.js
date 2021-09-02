@@ -64,7 +64,7 @@ export default function MyVotes({ navigation, route }) {
         {loading && <ActivityIndicator color='#878FFF' />}
         <FlatList
           data={data}
-          initialNumToRender={50}
+          initialNumToRender={100}
           renderItem={renderItem}
           keyExtractor={item => item._id}
         />

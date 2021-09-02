@@ -271,7 +271,7 @@ app.get("/votings/:id", auth, (req, res) => {
 
 app.post("/votings/decrypt/:id", auth, (req, res) => {
     voting_id = req.params.id;
-    private_key = JSON.stringify(req.body.private_key).replace(/\"/g, "").replace(/\\n/gm, '\n');
+    private_key = JSON.stringify(req.body.private_key).replace(/\"/g, "").replace(/\\n/gm, '\n').replace(/\\/gm, '');
     console.log(private_key);
     Voting.findOne({'_id':voting_id},(err,result)=>{
         if(err){
@@ -286,7 +286,7 @@ app.post("/votings/decrypt/:id", auth, (req, res) => {
                 return false != decryptDATA(item.encrypted_vote_data,private_key);
             });
             var decryptedData = decryptDATA(itemFind.encrypted_vote_data,private_key);
-            res.status(200).json({decrypted_vote_info: decryptedData.toString()});
+            res.status(200).json(decryptedData.toString());
         }
     });
 });
@@ -335,14 +335,16 @@ app.post("/votings/vote",auth,(req, res) => {
                         result.is_active = false;
                     }
                     result.save();
-                    const decryptedData = decryptDATA(encryptedData,privateKey2);
-                    /** const decryptedData = crypto.privateDecrypt({
+                    
+                    /**const decryptedData = decryptDATA(encryptedData,privateKey2); 
+                     * const decryptedData = crypto.privateDecrypt({
                         key: privateKey2,
                         padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
                         oaepHash: "sha256",
+                         console.log("decrypted data: ", decryptedData.toString());
                     },encryptedData
                     );*/
-                    console.log("decrypted data: ", decryptedData.toString());
+                   
                     res.status(200).json(privateKey.export({type: 'pkcs1', format: 'pem'}));
                 }else{
                     res.status(400).send("User already voted");
