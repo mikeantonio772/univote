@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, LogBox, View, ImageBackground, Dimensions, Text, ActivityIndicator, FlatList, Alert, ScrollView } from 'react-native';
+import { StyleSheet, LogBox, View, ImageBackground, Dimensions, Text, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import moment from 'moment';
-import CheckBox from '@react-native-community/checkbox';
 import Btn from "../components/Btn";
 import Header from '../components/Header';
 import Title from '../components/Title';
@@ -16,8 +15,6 @@ export default function VoteProcess({ navigation, route }) {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [checked, setChecked] = useState('');
-  const [candidate, setCandidate] = useState("");
 
   let header = {
     headers: {
@@ -38,47 +35,10 @@ export default function VoteProcess({ navigation, route }) {
     setLoading(false);
   }, []);
 
-  let body = {
-    _id: user.eleicao_id,
-    candidate: {
-      id: candidate
-    },
-    username: user.username
-  };
-
-  const successAlert = (data) =>
-    Alert.alert(
-      "Voto Computado (Copie e guarde sua chave privada)",
-      "Chave Privada:\n" + data,
-      [{ text: "OK", onPress: () => navigation.navigate('Home', { user }) }]
-    );
-
-  const sendVotingRequest = async () => {
-    await api.post('/votings/vote', body, header)
-      .then((response) => successAlert(JSON.stringify(response.data)))
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
   const renderItem = ({ item }) => (
     <View style={styles.container}>
       <Card>
-        <View flexDirection='row' alignItems='center'>
-          <CheckBox
-            style={{ marginHorizontal: 15 }}
-            tintColors={{ true: 'white', false: 'white' }}
-            value={checked.includes(item._id)}
-            onValueChange={() => {
-              if (checked.includes(item._id)) {
-                setChecked('');
-                setCandidate('');
-              } else {
-                setChecked(item._id);
-                setCandidate(item.id);
-              }
-            }}
-          />
+        <View flexDirection='row' alignItems='center' justifyContent='center'>
           <Text style={[styles.baseText, { fontWeight: 'bold', fontSize: 22 }]}>{item.id}</Text>
         </View>
       </Card>
@@ -93,7 +53,7 @@ export default function VoteProcess({ navigation, route }) {
     return (
       <ImageBackground style={styles.image} source={background2}>
         <Header />
-        <Title text='Votação' back={true} onPressBack={() => navigation.goBack()} />
+        <Title text='Detalhes das Votações' back={true} onPressBack={() => navigation.goBack()} />
         <View style={styles.container}>
           {data ?
             <>
@@ -101,20 +61,21 @@ export default function VoteProcess({ navigation, route }) {
                 <Card>
                   <View alignItems='center'>
                     <Text style={[styles.baseText, { fontWeight: 'bold', fontSize: 22 }]}>{data.title}</Text>
+                    <Text style={[styles.baseText, { marginBottom: 10 }]}>Eleição encerrada</Text>
+                    <Text style={[styles.baseText, { marginBottom: 20 }]}>Total de Votos: {data.__v}</Text>
                   </View>
-                  <Text style={[styles.baseText, {marginBottom: 20}]}>{data.description}</Text>
+                  <Text style={[styles.baseText, { marginBottom: 20 }]}>{data.description}</Text>
                   <Text style={[styles.baseText, {}]}>Início: {moment(data.date_start).format('DD/MM/YYYY')}</Text>
                   <Text style={[styles.baseText, {}]}>Fim: {moment(data.date_finish).format('DD/MM/YYYY')}</Text>
-                  <Text style={[styles.baseText, { marginTop: 20 }]}>Escolha um(a) candidato(a):</Text>
+                  <Text style={[styles.baseText, { marginTop: 20 }]}>Candidatos Participantes:</Text>
                   <FlatList
                     data={data.candidates}
                     renderItem={renderItem}
-                    extraData={checked}
                     keyExtractor={item => item._id}
                     scrollEnabled={false}
                   />
                   <View alignItems='center'>
-                    <Btn title='CONFIRMAR' width={256} margin={16} onPress={() => sendVotingRequest()} />
+                    <Btn title='Voltar' width={256} margin={16} onPress={() => navigation.goBack()} />
                   </View>
                 </Card>
               </ScrollView>

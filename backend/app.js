@@ -101,7 +101,7 @@ app.post("/login", async (req,res)=>{
 
 app.post("/votings/my", auth, (req, res) => {
     var username_hash = crypto.createHash('sha256').update(req.body.username).digest('hex');
-    Voting.find({'users_able_to_vote.id':username_hash},(err,result)=>{
+    Voting.find({'users_able_to_vote.id':username_hash, 'users_able_to_vote.has_voted':req.body.has_voted},(err,result)=>{
         if(err){
             console.log(`[ERR] FINDING VOTES FOR USER: ${err}`);
         }else{

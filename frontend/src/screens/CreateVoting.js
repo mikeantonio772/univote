@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, ImageBackground, Dimensions, Text, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, ImageBackground, Dimensions, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
 import Btn from "../components/Btn";
 import Header from '../components/Header';
 import Title from '../components/Title';
@@ -30,6 +30,10 @@ export default function CreateVoting({ navigation, route }) {
       id: candidatos
     }, {
       id: "Zé Ruela"
+    }, {
+      id: "Terceiro"
+    }, {
+      id: "Branco"
     }],
     requested_by: user.username,
     date_start: dataInit,
@@ -43,11 +47,19 @@ export default function CreateVoting({ navigation, route }) {
     }]
   };
 
+  const successAlert = () =>
+    Alert.alert(
+      "Sucesso",
+      "Eleição Cadastrada",
+      [{ text: "OK", onPress: () => navigation.navigate('Home', { user }) }]
+    );
+
   const sendCreateVotingRequest = async () => {
     return api.post('/votings/create', body, header)
       .then((response) => {
         console.log(JSON.stringify(response.data));
       })
+      .then(() => successAlert())
       .catch((error) => {
         console.error(error);
       });

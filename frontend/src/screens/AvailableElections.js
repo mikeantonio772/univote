@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ImageBackground, Dimensions, Text, FlatList } from 'react-native';
+import { StyleSheet, View, ImageBackground, Dimensions, Text, FlatList, ActivityIndicator } from 'react-native';
+import moment from 'moment';
 import Btn from "../components/Btn";
 import Header from '../components/Header';
 import Title from '../components/Title';
@@ -8,30 +9,36 @@ import Card from '../components/Card';
 import InvalidUser from './InvalidUser';
 import api from '../services/api';
 
-const renderItem = ({ item }) => (
-  <>
-    {item.is_active == true ?
-      <View style={styles.container}>
-        <Card>
-          <View alignItems='center'>
-            <Text style={[styles.baseText, { fontWeight: 'bold', fontSize: 22 }]}>{item.title}</Text>
-          </View>
-          <Text style={[styles.baseText, {}]}>{item.description}</Text>
-          <Text style={[styles.baseText, { fontWeight: 'bold' }]}>Início: {item.date_start}</Text>
-          <Text style={[styles.baseText, { fontWeight: 'bold' }]}>Fim: {item.date_finish}</Text>
-          <View alignItems='center'>
-            <Btn title='VOTAR' width={256} margin={0} />
-          </View>
-        </Card>
-      </View>
-      : null}
-  </>
-)
-
 export default function AvailableElections({ navigation, route }) {
 
   const { user } = route.params;
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const voteFunc = (eleicao_id) => {
+    user.eleicao_id = eleicao_id;
+    navigation.navigate('Vote Process', { user })
+  }
+
+  const renderItem = ({ item }) => (
+    <>
+      {item.is_active == true ?
+        <View style={styles.container}>
+          <Card>
+            <View alignItems='center'>
+              <Text style={[styles.baseText, { fontWeight: 'bold', fontSize: 22 }]}>{item.title}</Text>
+            </View>
+            <Text style={[styles.baseText, { marginBottom: 20 }]}>{item.description}</Text>
+            <Text style={[styles.baseText, {}]}>Início: {moment(item.date_start).format('DD/MM/YYYY')}</Text>
+            <Text style={[styles.baseText, {}]}>Fim: {moment(item.date_finish).format('DD/MM/YYYY')}</Text>
+            <View alignItems='center'>
+              <Btn title='VOTAR' width={256} margin={12} onPress={() => voteFunc(item._id)} />
+            </View>
+          </Card>
+        </View>
+        : null}
+    </>
+  )
 
   let header = {
     headers: {
@@ -41,22 +48,26 @@ export default function AvailableElections({ navigation, route }) {
   };
 
   useEffect(() => {
-  api.post('/votings/my', { username: user.username }, header)
-    .then((response) => {
-      setData(response.data)
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  });
+    setLoading(true);
+    api.post('/votings/my', { username: user.username, has_voted: false }, header)
+      .then((response) => {
+        setData(response.data)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    setLoading(false);
+  }, []);
 
   if (user.token) {
     return (
       <ImageBackground style={styles.image} source={background2}>
         <Header />
         <Title text='Eleições Disponíveis' back={true} onPressBack={() => navigation.goBack()} />
+        {loading && <ActivityIndicator color='#878FFF' />}
         <FlatList
           data={data}
+          initialNumToRender={50}
           renderItem={renderItem}
           keyExtractor={item => item._id}
         />
