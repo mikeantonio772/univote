@@ -274,5 +274,4 @@ app.post("/votings/create",auth,(req,res)=>{
 });
 
 
-
 module.exports = app;
