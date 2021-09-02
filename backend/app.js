@@ -52,9 +52,6 @@ app.get('/login',
   }
 );
 
-app.get("/", function (req,res){
-    res.send("oi");
-});
 app.post('/login/callback',
    passport.authenticate('saml', { failureRedirect: '/login/fail' }),function(req, res) {
     try{
@@ -119,11 +116,12 @@ function checkDup(arr) {
 
 function decryptDATA(encryptedData, privateKey){
     try{
+        buffer = Buffer.from(encryptedData, "base64");
         const decryptedData = crypto.privateDecrypt({
             key: privateKey,
             padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
             oaepHash: "sha256",
-        },encryptedData
+        },buffer
         );
         return decryptedData;
     }catch (err) {
@@ -273,7 +271,8 @@ app.get("/votings/:id", auth, (req, res) => {
 
 app.post("/votings/decrypt/:id", auth, (req, res) => {
     voting_id = req.params.id;
-    private_key = req.body.private_key;
+    private_key = JSON.stringify(req.body.private_key).replace(/\"/g, "").replace(/\\n/gm, '\n');
+    console.log(private_key);
     Voting.findOne({'_id':voting_id},(err,result)=>{
         if(err){
             console.log(`[ERR] QUERYING VOTE ID ${voting_id}: ${err}`);
@@ -281,11 +280,13 @@ app.post("/votings/decrypt/:id", auth, (req, res) => {
             /*result.votes.forEach(element=>{
                 decryptDATA(element.encrypted_vote_data,private_key);
             });*/
-            var decryptedData = result.votes.find(item =>{
+            var privateKey = crypto.createPrivateKey({key: private_key, type: 'pkcs1', format: 'pem'});
+            console.log(privateKey);
+            var itemFind = result.votes.find(item =>{
                 return false != decryptDATA(item.encrypted_vote_data,private_key);
             });
-            result.votes.encrypted_vote_data
-            res.status(200).json(result);
+            var decryptedData = decryptDATA(itemFind.encrypted_vote_data,private_key);
+            res.status(200).json({decrypted_vote_info: decryptedData.toString()});
         }
     });
 });
@@ -308,9 +309,6 @@ app.post("/votings/vote",auth,(req, res) => {
                     user.has_voted = true;
                     const candidate_id = req.body.candidate.id;
                     const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-                        modulusLength: 1024,
-                    });
-                    const { publicKey2, privateKey2 } = crypto.generateKeyPairSync("rsa", {
                         modulusLength: 1024,
                     });
                     const encryptedData = crypto.publicEncrypt(
