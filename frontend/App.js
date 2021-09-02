@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './src/screens/Login';
 import Sso from './src/screens/Sso';
+import Vote from './src/screens/Vote';
 import Home from './src/screens/Home';
 import About from './src/screens/About';
 import AvailableElections from './src/screens/AvailableElections'
@@ -22,6 +23,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
         <Stack.Screen name="Login" component={Login} initialParams={{ user: {token: null, username: ''}}}/>
         <Stack.Screen name="Sso" component={Sso}/>
+        <Stack.Screen name="Vote" component={Vote}/>
         <Stack.Screen name="Home" component={Home}/>
         <Stack.Screen name="About" component={About}/>
         <Stack.Screen name="Available Elections" component={AvailableElections}/>

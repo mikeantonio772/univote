@@ -50,7 +50,7 @@ export default function VoteProcess({ navigation, route }) {
     Alert.alert(
       "Voto Computado (Copie e guarde sua chave privada)",
       "Chave Privada:\n" + data,
-      [{ text: "OK", onPress: () => navigation.navigate('Home', { user }) }]
+      [{ text: "OK", onPress: () => navigation.navigate('Vote', { user , data}) }]
     );
 
   const sendVotingRequest = async () => {
