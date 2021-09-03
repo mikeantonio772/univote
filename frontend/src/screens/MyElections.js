@@ -63,29 +63,20 @@ export default function MyElections({ navigation, route }) {
       <ImageBackground style={styles.image} source={background2}>
         <Header />
         <Title text='Minhas Eleições' back={true} onPressBack={() => navigation.goBack()} />
+        <View alignItems='center'>
+          <Btn title='Criar Eleição' width={256} margin={12} onPress={() => navigation.navigate('Create Voting', { user })} />
+        </View>
         <View style={styles.container}>
           {data ?
-            <>
-              <ScrollView>
-                <View style={styles.container}>
-                  <Card>
-                    <Text style={styles.baseText}>Crie sua própria eleição!
-                      Clique no botão abaixo e preencha os campos solicitados. Lembre-se de inserir
-                      todos os eleitores aptos a votar, pois apenas eles poderão participar da votação.
-                      Boa eleição!</Text>
-                    <View alignItems='center'>
-                      <Btn title='Criar Eleição' width={256} margin={0} onPress={() => navigation.navigate('Create Voting', { user })} />
-                    </View>
-                  </Card>
-                </View>
-                <FlatList
-                  data={data}
-                  initialNumToRender={50}
-                  renderItem={renderItem}
-                  keyExtractor={item => item._id}
-                />
-              </ScrollView>
-            </>
+            <ScrollView>
+              
+              <FlatList
+                data={data}
+                initialNumToRender={50}
+                renderItem={renderItem}
+                keyExtractor={item => item._id}
+              />
+            </ScrollView>
             :
             loading && <ActivityIndicator color='#878FFF' />}
         </View>

@@ -204,6 +204,19 @@ app.post("/login", async (req,res)=>{
         console.log(`[ERR] USER LOGIN: ${err}`);
     }
 });
+
+app.post("/votings/my", auth, (req, res) => {
+    var username_hash = crypto.createHash('sha256').update(req.body.username).digest('hex');
+    Voting.find({'users_able_to_vote.id':username_hash, 'users_able_to_vote.has_voted':req.body.has_voted},(err,result)=>{
+        if(err){
+            console.log(`[ERR] FINDING VOTES FOR USER: ${err}`);
+        }else{
+            console.log(result);
+            res.status(200).json(result);
+        }
+    });
+});
+
  */
 
 app.post("/votings/my", auth, (req, res) => {
@@ -212,6 +225,7 @@ app.post("/votings/my", auth, (req, res) => {
         if(err){
             console.log(`[ERR] FINDING VOTES FOR USER: ${err}`);
         }else{
+            console.log(result);
             res.status(200).json(result);
         }
     });
@@ -311,13 +325,14 @@ app.post("/votings/vote",auth,(req, res) => {
                     const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
                         modulusLength: 1024,
                     });
+                    var data = req.body.username + ' votou em ' + candidate_id;
                     const encryptedData = crypto.publicEncrypt(
                         {
                         key: publicKey,
                         padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
                         oaepHash: "sha256",
                         },
-                        Buffer.from(req.body.username)
+                        Buffer.from(data)
                     );
                     console.log(encryptedData.toString("base64"));
                     const vote = {
@@ -386,11 +401,6 @@ app.post("/votings/create",auth,(req,res)=>{
         if (format_date_finish <= format_date_start){
             res.status(400).send("Finish date cannot come first than date start");
             console.log("Finish date cannot come first than date start");
-            exit_error = true
-        }
-        if (format_date_start < Date.now()){
-            res.status(400).send("Date start needs to be current date + 1");
-            console.log("Date start needs to be current date + 1");
             exit_error = true
         }
         if (!exit_error){

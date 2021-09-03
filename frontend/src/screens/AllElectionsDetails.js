@@ -75,7 +75,7 @@ export default function AllElectionsDetails({ navigation, route }) {
                     scrollEnabled={false}
                   />
                   <View alignItems='center'>
-                    <Btn title='Voltar' width={256} margin={16} onPress={() => navigation.goBack()} />
+                    <Btn title='Fechar' width={256} margin={16} onPress={() => navigation.goBack()} />
                   </View>
                 </Card>
               </ScrollView>

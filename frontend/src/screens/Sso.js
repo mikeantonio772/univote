@@ -24,7 +24,7 @@ export default function Sso({ navigation }) {
   return (
     <WebView
       originWhitelist={['*']}
-      incognito={false}
+      incognito={true}
       source={{ uri: 'http://192.168.15.6:4001/login' }}
       onNavigationStateChange={onNavigationStateChange}
     />

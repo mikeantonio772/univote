@@ -46,19 +46,12 @@ export default function VoteProcess({ navigation, route }) {
     username: user.username
   };
 
-  const successAlert = (data) =>
-    Alert.alert(
-      "Voto Computado (Copie e guarde sua chave privada)",
-      "Chave Privada:\n" + data,
-      [{ text: "OK", onPress: () => navigation.navigate('Vote', { user , data}) }]
-    );
-
   const sendVotingRequest = async () => {
     await api.post('/votings/vote', body, header)
-      .then((response) => successAlert(JSON.stringify(response.data)))
-      .catch((error) => {
-        console.error(error);
-      });
+      .then((response) => {
+        const res = JSON.stringify(response.data)
+        navigation.navigate('Vote', { user, res })
+      })
   }
 
   const renderItem = ({ item }) => (

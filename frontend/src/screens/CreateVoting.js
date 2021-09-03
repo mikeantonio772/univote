@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, ImageBackground, Dimensions, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
+import { StyleSheet, TextInput, ImageBackground,View, Dimensions, Text, SafeAreaView, ScrollView, Alert } from 'react-native';
 import Btn from "../components/Btn";
 import Header from '../components/Header';
 import Title from '../components/Title';
 import background2 from "../../assets/background2.png"
 import InvalidUser from './InvalidUser';
 import api from '../services/api';
+import VoteProcess from './VoteProcess';
 
 export default function CreateVoting({ navigation, route }) {
 
@@ -17,34 +18,12 @@ export default function CreateVoting({ navigation, route }) {
   const [titulo, onChangeTextTitulo] = useState("");
   const [descricao, onChangeTextDescricao] = useState("");
   const [podemVotar, onChangeTextPodemVotar] = useState("");
-
+  
   let header = {
     headers: {
       "x-access-token": user.token,
       'Content-Type': 'application/json',
     },
-  };
-
-  let body = {
-    candidates: [{
-      id: candidatos
-    }, {
-      id: "Zé Ruela"
-    }, {
-      id: "Terceiro"
-    }, {
-      id: "Branco"
-    }],
-    requested_by: user.username,
-    date_start: dataInit,
-    date_finish: dataFim,
-    title: titulo,
-    description: descricao,
-    users_able_to_vote: [{
-      id: podemVotar
-    }, {
-      id: "mikeantonio772"
-    }]
   };
 
   const successAlert = () =>
@@ -55,6 +34,34 @@ export default function CreateVoting({ navigation, route }) {
     );
 
   const sendCreateVotingRequest = async () => {
+    var arr_candidatos = [];
+    var new_candidatos = candidatos.split(",");
+    new_candidatos.forEach(element => {
+      var item = {
+        id: element
+      }
+      arr_candidatos.push(item);
+    });
+
+    var arr_voters = [];
+    var new_voters = podemVotar.split(",");
+    new_voters.forEach(element => {
+      var item = {
+        id: element
+      }
+      arr_voters.push(item);
+    });
+
+    let body = {
+      candidates: arr_candidatos,
+      requested_by: user.username,
+      date_start: dataInit,
+      date_finish: dataFim,
+      title: titulo,
+      description: descricao,
+      users_able_to_vote: arr_voters,
+    };
+
     return api.post('/votings/create', body, header)
       .then((response) => {
         console.log(JSON.stringify(response.data));
@@ -65,19 +72,24 @@ export default function CreateVoting({ navigation, route }) {
       });
   }
 
-  if (user.token) {
+  if (true || user.token) {
     return (
       <ImageBackground style={styles.image} source={background2}>
         <Header />
         <Title text='Criar Eleição' back={true} onPressBack={() => navigation.goBack()} />
         <ScrollView>
+          <View style={styles.container}>
+          <Text style={styles.baseText}>
+            Lembre-se de inserir todos os eleitores aptos a votar, pois apenas eles poderão participar da votação.
+          </Text>
+          </View>
           <Text style={styles.title}>1 - Insira os candidatos:</Text>
           <SafeAreaView alignItems='center' marginBottom={12}>
             <TextInput
               style={styles.input}
               onChangeText={onChangeTextCandidatos}
               value={candidatos}
-              placeholder="Ex: Peçanha, De Paula"
+              placeholder="Ex: Opção 1, Opção 2, Opção 3, Branco"
               placeholderTextColor="#FFFFFF88"
             />
           </SafeAreaView>
@@ -107,28 +119,30 @@ export default function CreateVoting({ navigation, route }) {
               style={styles.input}
               onChangeText={onChangeTextTitulo}
               value={titulo}
-              placeholder="Ex: Eleições GEES 2021"
+              placeholder="Ex: Eleições X 2021"
               placeholderTextColor="#FFFFFF88"
             />
           </SafeAreaView>
           <Text style={styles.title}>5 - Descrição:</Text>
           <SafeAreaView alignItems='center' marginBottom={12}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {height: 140, textAlignVertical: 'top'}]}
               onChangeText={onChangeTextDescricao}
               value={descricao}
-              placeholder="Ex: Eleições para a gestão do GEES..."
+              placeholder="Ex: Eleições para a..."
               placeholderTextColor="#FFFFFF88"
+              multiline={true}
             />
           </SafeAreaView>
           <Text style={styles.title}>6 - Eleitores Permitidos:</Text>
           <SafeAreaView alignItems='center' marginBottom={12}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {height: 90, textAlignVertical: 'top'}]}
               onChangeText={onChangeTextPodemVotar}
               value={podemVotar}
-              placeholder="Ex: Makunga, Tonico"
+              placeholder="Ex: arielfrancois, mikeantonio772"
               placeholderTextColor="#FFFFFF88"
+              multiline={true}
             />
           </SafeAreaView>
           <SafeAreaView alignItems='center' marginBottom={32}>

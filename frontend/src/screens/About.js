@@ -6,21 +6,13 @@ import Card from '../components/Card';
 import api from '../services/api';
 
 export default function About({ navigation }) {
-
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    api.get("/sobre")
-      .then((res) => res.json())
-      .then((data) => setData(data.texto));
-  }, []);
-
   return (
     <ImageBackground style={styles.image} source={background1}>
       <ScrollView style={{ marginVertical: '25%' }} contentContainerStyle={styles.container}>
         <Card>
           <Text style={styles.text}>
-            {!data ? "Texto indisponivel" : data}
+            O univote é uma aplicação desenvolvida em node.js e react-native, que busca ser uma alternativa para
+            eleições em instituições acadêmicas. O univote utiliza conexão com serviço de autenticação que utiliza SAML 2.0
           </Text>
           <View alignItems='center'>
             <Btn title="Fechar" width={128} margin={8} onPress={() => navigation.goBack()} />

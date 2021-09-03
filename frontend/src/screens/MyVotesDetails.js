@@ -84,10 +84,9 @@ export default function VoteProcess({ navigation, route }) {
                 <Card>
                   <View alignItems='center'>
                     <Text style={[styles.baseText, { fontWeight: 'bold', fontSize: 22 }]}>{data.title}</Text>
-                    <Text style={[styles.baseText, { marginBottom: 10 }]}>Eleição encerrada</Text>
                     <Text style={[styles.baseText, { marginBottom: 20 }]}>Total de Votos: {data.__v}</Text>
                   </View>
-                  <Text style={[styles.baseText, { marginBottom: 20 }]}>{data.description}</Text>
+                  <Text style={[styles.baseText, { marginBottom: 10 }]}>{data.description}</Text>
                   <Text style={[styles.baseText, {}]}>Início: {moment(data.date_start).format('DD/MM/YYYY')}</Text>
                   <Text style={[styles.baseText, {}]}>Fim: {moment(data.date_finish).format('DD/MM/YYYY')}</Text>
                   <Text style={[styles.baseText, { marginTop: 20 }]}>Candidatos Participantes:</Text>
@@ -106,7 +105,7 @@ export default function VoteProcess({ navigation, route }) {
                       placeholderTextColor="#FFFFFF88"
                     />
                     <Btn title="Auditar voto" width={256} margin={16} onPress={() => checkEncrypt()} /> 
-                    <Btn title='Voltar' width={256} margin={16} onPress={() => navigation.goBack()} />
+                    <Btn title='Fechar' width={256} margin={16} onPress={() => navigation.goBack()} />
                   </View>
                 </Card>
               </ScrollView>

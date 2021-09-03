@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import background2 from '../../assets/background2.png';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 import Btn from '../components/Btn';
 import VoteIcon from 'react-native-vector-icons/FontAwesome5';
-import Title from '../components/Title';
-import {SafeAreaView, View, ImageBackground, Dimensions , Text, TouchableOpacity, Clipboard, StyleSheet } from 'react-native'
+import { View, ImageBackground, Dimensions , Text, Clipboard, StyleSheet, Alert } from 'react-native'
 
 export default function Vote({ navigation, route }) {
   const { user } = route.params;
-  const privateKey = route.params.data;
+  const privateKey = route.params.res;
   
   const copyToClipboard = () => {
     Clipboard.setString(privateKey)
+    Alert.alert(
+      "Chave Privada Copiada",
+      "Guarde-a para autenticar seu voto\n",
+      [{ text: "OK", onPress: () => navigation.navigate('Home', { user }) }]
+    );
   }
   
   return (
@@ -22,36 +25,16 @@ export default function Vote({ navigation, route }) {
           <VoteIcon style={{ margin: 24, top: -24 }} name="vote-yea" size={100} color="#878FFF" />
           <Text style={styles.text}>Seu voto foi finalizado! Clique no botão para copiar sua chave privada</Text>
           <Btn title="Copiar chave privada" width={256} margin={16} onPress={() => copyToClipboard()} /> 
-          <Btn title="Home" width={256} margin={16} onPress={() => navigation.navigate('Home', { user })} />
         </View>
-        <Footer backgroundColor="#878FFF" onPressAbout={() => navigation.navigate('About')} />
       </ImageBackground>
   )
 }
-/**
-  const fetchCopiedText = async () => {
-    const text = await Clipboard.getString()
-    setCopiedText(text)
-  }
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={() => copyToClipboard()}>
-          <Text>Click here to copy to Clipboard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => fetchCopiedText()}>
-          <Text>View copied text</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.copiedText}>{copiedText}</Text>
-      </View>
-
-    </SafeAreaView> */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     margin: 32,
     bottom: 24,
   },

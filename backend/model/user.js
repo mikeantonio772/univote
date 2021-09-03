@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     token: {type: String},
     
     //fields for contact information
-    email: {type: String, unique:true},
+    email: {type: String, default: null},
     first_name: {type: String, default: null},
     last_name: {type: String, default: null},
 });
